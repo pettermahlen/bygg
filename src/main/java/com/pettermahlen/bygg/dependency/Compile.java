@@ -22,5 +22,5 @@ import static java.lang.annotation.RetentionPolicy.*;
 @BindingAnnotation
 @Target({ FIELD, PARAMETER, METHOD })
 @Retention(RUNTIME)
-public @interface CompileTime {
+public @interface Compile {
 }

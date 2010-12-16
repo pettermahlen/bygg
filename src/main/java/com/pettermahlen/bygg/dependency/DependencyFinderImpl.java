@@ -18,7 +18,7 @@ import java.util.List;
  * @since Dec 15, 2010
  */
 public class DependencyFinderImpl implements DependencyFinder {
-    public Classpath makeAvailable(List<Dependency> depencies) {
+    public Classpath makeAvailable(Iterable<Dependency> depencies) {
         throw new UnsupportedOperationException();
     }
 }

@@ -9,8 +9,7 @@ package com.pettermahlen.bygg;
  * TODO: document this class!
  *
  * @author Petter Måhlén
- * @since Dec 14, 2010
+ * @since Dec 15, 2010
  */
-public interface SourceAssembler {
-    Sources sources();
+public interface SourceSelector {
 }

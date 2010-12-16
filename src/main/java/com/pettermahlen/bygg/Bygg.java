@@ -23,7 +23,7 @@ public class Bygg {
         //    => done using a Buildline, which has a list of BuildSteps. Need to have nice default build lines and nice APIs for creating custom ones.
         // - configuring dependencies (using Maven-style dependencies, or using Bygg-style dependencies)
         //    => done somehow. Probably as a configuration parameter of the classPathAssemblers (there should be three or so: compiling, packaging and testing)
-        //    'scope' of dependencies is probably a set of bit flags: include into COMPILE, TEST, PACKAGE, and should be transitively applied.
+        //    'scope' of dependencies is probably a set of bit flags: include into PRODUCT, TEST, PACKAGE, and should be transitively applied.
         // - running/reporting
         //    => running is easy, reporting is done by explicit messages to a Reporter implementation
         // - we also need some sort of build scope that gets populated with relevant data - we may need to re-inject/re-bind some things between each build step

@@ -5,14 +5,11 @@
 
 package com.pettermahlen.bygg;
 
-import java.util.List;
-
 /**
  * TODO: document this class!
  *
  * @author Petter Måhlén
  * @since Dec 15, 2010
  */
-public interface DependencyFinder {
-    Classpath makeAvailable(Iterable<Dependency> depencies);
+public interface Target {
 }

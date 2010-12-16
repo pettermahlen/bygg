@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.pettermahlen.bygg.*;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ public class ClasspathAssembler implements BuildStepExecutor {
     }
 
     public Module execute(Reporter reporter) {
-        List<Dependency> depencies = dependencySelector.select(dependencies);
+        Collection<Dependency> depencies = dependencySelector.select(dependencies);
 
         final Classpath classpath = dependencyFinder.makeAvailable(depencies);
 

@@ -5,10 +5,10 @@
 
 package com.pettermahlen.bygg;
 
-import com.pettermahlen.bygg.dependency.CompileDependencySelector;
+import com.pettermahlen.bygg.dependency.ClasspathType;
+import com.pettermahlen.bygg.dependency.DependencySelectorImpl;
 import com.pettermahlen.bygg.dependency.DependencyFinderImpl;
-import com.pettermahlen.bygg.steps.BuildConfiguration;
-import com.pettermahlen.bygg.steps.ClasspathAssembly;
+import com.pettermahlen.bygg.steps.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,13 +24,20 @@ public class Buildlines {
         
     }
 
-    public static Buildline jarLibrary() {
+    public static Buildline libraryJar() {
         return new Buildline() {
             public List<BuildStep> getBuildSteps() {
                 return Arrays.asList(
-                        new BuildConfiguration(),
-                        new ClasspathAssembly(new CompileDependencySelector(), new DependencyFinderImpl())
-                        );
+                        new Configure(),
+                        new AssembleClasspath(new DependencySelectorImpl(ClasspathType.PRODUCT), new DependencyFinderImpl()),
+                        new AssembleSources(new SourceSelectorImpl(ClasspathType.PRODUCT)),
+                        new Compile(ClasspathType.PRODUCT),
+                        new AssembleClasspath(new DependencySelectorImpl(ClasspathType.TEST), new DependencyFinderImpl()),
+                        new AssembleSources(new SourceSelectorImpl(ClasspathType.TEST)),
+                        new Compile(ClasspathType.TEST),
+                        new RunTest(),
+                        new PackageArtifact()
+                );
             }
         };
     }

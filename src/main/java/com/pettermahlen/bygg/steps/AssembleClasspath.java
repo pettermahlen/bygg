@@ -17,12 +17,12 @@ import com.pettermahlen.bygg.executors.ClasspathAssembler;
  * @author Petter Måhlén
  * @since Dec 15, 2010
  */
-public class ClasspathAssembly implements BuildStep {
+public class AssembleClasspath implements BuildStep {
     private final DependencySelector dependencySelector;
     private final DependencyFinder dependencyFinder;
 
     @Inject
-    public ClasspathAssembly(DependencySelector dependencySelector, DependencyFinder dependencyFinder) {
+    public AssembleClasspath(DependencySelector dependencySelector, DependencyFinder dependencyFinder) {
         this.dependencySelector = dependencySelector;
         this.dependencyFinder = dependencyFinder;
     }

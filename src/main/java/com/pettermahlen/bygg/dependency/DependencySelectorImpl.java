@@ -14,7 +14,6 @@ import com.pettermahlen.bygg.Dependency;
 import com.pettermahlen.bygg.DependencySelector;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * TODO: document this class!
@@ -22,15 +21,21 @@ import java.util.List;
  * @author Petter Måhlén
  * @since Dec 15, 2010
  */
-public class CompileDependencySelector implements DependencySelector {
+public class DependencySelectorImpl implements DependencySelector {
+    private final ClasspathType classpathType;
+
+    public DependencySelectorImpl(ClasspathType classpathType) {
+        this.classpathType = classpathType;
+    }
+
     public Key<Classpath> getKey() {
-        return Key.get(Classpath.class, CompileTime.class);
+        return classpathType.getKey();
     }
 
     public Collection<Dependency> select(Dependencies dependencies) {
         return Collections2.filter(dependencies.getDependencies(), new Predicate<Dependency>() {
             public boolean apply(Dependency input) {
-                return input.includeIn(ClasspathType.COMPILE); 
+                return input.includeIn(classpathType);
             }
         });
     }
