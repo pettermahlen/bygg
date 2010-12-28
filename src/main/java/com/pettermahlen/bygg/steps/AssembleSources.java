@@ -9,6 +9,8 @@ import com.google.inject.Injector;
 import com.pettermahlen.bygg.*;
 import com.pettermahlen.bygg.executors.SourceAssembler;
 
+import java.util.Set;
+
 /**
  * TODO: document this class!
  *
@@ -20,6 +22,26 @@ public class AssembleSources implements BuildStep {
 
     public AssembleSources(SourceSelector sourceSelector) {
         this.sourceSelector = sourceSelector;
+    }
+
+    public String getName() {
+        throw new UnsupportedOperationException();
+    }
+
+    public Set<? extends BuildResult> inputs() {
+        throw new UnsupportedOperationException();
+    }
+
+    public Set<? extends BuildResult> outputs() {
+        throw new UnsupportedOperationException();
+    }
+
+    public Set<? extends BuildStep> predecessors() {
+        throw new UnsupportedOperationException();
+    }
+
+    public Set<? extends BuildStep> successors() {
+        throw new UnsupportedOperationException();
     }
 
     public BuildStepExecutor createExecutor(Injector injector, Reporter reporter) {

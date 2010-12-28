@@ -9,6 +9,8 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
 
+import java.util.Set;
+
 /**
  * TODO: document this class!
  *
@@ -16,6 +18,13 @@ import com.google.inject.Module;
  * @since Dec 14, 2010
  */
 public interface BuildStep {
+    String getName();
+
+    Set<? extends BuildResult> inputs();
+    Set<? extends BuildResult> outputs();
+
+    Set<? extends BuildStep> predecessors();
+    Set<? extends BuildStep> successors();
 
     BuildStepExecutor createExecutor(Injector injector, Reporter reporter);
 }
