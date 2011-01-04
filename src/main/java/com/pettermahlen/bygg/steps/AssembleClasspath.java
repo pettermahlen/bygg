@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.pettermahlen.bygg.*;
+import com.pettermahlen.bygg.scheduling.Schedulable;
 
 import java.util.Collection;
 import java.util.Set;
@@ -42,11 +43,11 @@ public class AssembleClasspath implements BuildStep {
         throw new UnsupportedOperationException();
     }
 
-    public Set<? extends BuildStep> predecessors() {
+    public Set<? extends Schedulable> predecessors() {
         throw new UnsupportedOperationException();
     }
 
-    public Set<? extends BuildStep> successors() {
+    public Set<? extends Schedulable> successors() {
         throw new UnsupportedOperationException();
     }
 

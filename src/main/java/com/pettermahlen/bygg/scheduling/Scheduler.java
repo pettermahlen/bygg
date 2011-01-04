@@ -8,8 +8,6 @@ package com.pettermahlen.bygg.scheduling;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
-import com.pettermahlen.bygg.BuildResult;
-import com.pettermahlen.bygg.BuildStep;
 
 import java.util.*;
 
@@ -23,13 +21,13 @@ import java.util.*;
 public class Scheduler {
 
     // TODO: make this API more flexible using generics correctly
-    public Iterable<DagNode<BuildStep>> schedule(Collection<? extends BuildStep> buildSteps) {
+    public Iterable<DagNode<Schedulable>> schedule(Collection<? extends Schedulable> buildSteps) {
         // first, go through all build steps and establish which steps need to run before
 
-        Multimap<BuildStep, BuildStep> mustRunAfter = ArrayListMultimap.create();
+        Multimap<Schedulable, Schedulable> mustRunAfter = ArrayListMultimap.create();
 
-        for (BuildStep step : buildSteps) {
-            for (BuildStep stepToCheck : buildSteps) {
+        for (Schedulable step : buildSteps) {
+            for (Schedulable stepToCheck : buildSteps) {
                 if (step == stepToCheck) {
                     continue;
                 }
@@ -40,19 +38,19 @@ public class Scheduler {
             }
         }
 
-        Set<DagNode<BuildStep>> allNodes = createRecursively(new HashSet<BuildStep>(buildSteps), new HashSet<DagNode<BuildStep>>(), mustRunAfter);
+        Set<DagNode<Schedulable>> allNodes = createRecursively(new HashSet<Schedulable>(buildSteps), new HashSet<DagNode<Schedulable>>(), mustRunAfter);
 
-        Set<DagNode<BuildStep>> nodesWithPredecessors = findNodesWithPredecessors(allNodes);
+        Set<DagNode<Schedulable>> nodesWithPredecessors = findNodesWithPredecessors(allNodes);
 
         return Sets.difference(allNodes, nodesWithPredecessors);
     }
 
-    private Set<DagNode<BuildStep>> createRecursively(Set<? extends BuildStep> buildSteps, HashSet<DagNode<BuildStep>> allNodes, Multimap<BuildStep, BuildStep> mustRunAfter) {
+    private Set<DagNode<Schedulable>> createRecursively(Set<? extends Schedulable> buildSteps, HashSet<DagNode<Schedulable>> allNodes, Multimap<Schedulable, Schedulable> mustRunAfter) {
         int sizeBefore = buildSteps.size();
 
-        for (Iterator<? extends BuildStep> iterator = buildSteps.iterator() ; iterator.hasNext() ; ) {
-            BuildStep step = iterator.next();
-            DagNode<BuildStep> node = createNode(step, allNodes, mustRunAfter);
+        for (Iterator<? extends Schedulable> iterator = buildSteps.iterator() ; iterator.hasNext() ; ) {
+            Schedulable step = iterator.next();
+            DagNode<Schedulable> node = createNode(step, allNodes, mustRunAfter);
 
             if (node != null) {
                 allNodes.add(node);
@@ -72,15 +70,15 @@ public class Scheduler {
         }
     }
 
-    private DagNode<BuildStep> createNode(BuildStep step, HashSet<DagNode<BuildStep>> allNodes, Multimap<BuildStep, BuildStep> mustRunAfter) {
+    private DagNode<Schedulable> createNode(Schedulable step, HashSet<DagNode<Schedulable>> allNodes, Multimap<Schedulable, Schedulable> mustRunAfter) {
         if (!mustRunAfter.containsKey(step)) {
-            return new DagNode<BuildStep>(Collections.<DagNode<BuildStep>>emptyList(), step);
+            return new DagNode<Schedulable>(Collections.<DagNode<Schedulable>>emptyList(), step);
         }
 
-        HashSet<DagNode<BuildStep>> successorNodes = new HashSet<DagNode<BuildStep>>();
+        HashSet<DagNode<Schedulable>> successorNodes = new HashSet<DagNode<Schedulable>>();
 
-        for (BuildStep successor : mustRunAfter.get(step)) {
-            DagNode<BuildStep> successorNode = findNodeForStep(successor, allNodes);
+        for (Schedulable successor : mustRunAfter.get(step)) {
+            DagNode<Schedulable> successorNode = findNodeForStep(successor, allNodes);
 
             if (successorNode == null) {
                 return null;
@@ -89,11 +87,11 @@ public class Scheduler {
             successorNodes.add(successorNode);
         }
 
-        return new DagNode<BuildStep>(successorNodes, step);
+        return new DagNode<Schedulable>(successorNodes, step);
     }
 
-    private DagNode<BuildStep> findNodeForStep(BuildStep step, HashSet<DagNode<BuildStep>> nodes) {
-        for (DagNode<BuildStep> node : nodes) {
+    private DagNode<Schedulable> findNodeForStep(Schedulable step, HashSet<DagNode<Schedulable>> nodes) {
+        for (DagNode<Schedulable> node : nodes) {
             if (node.getPayload().equals(step)) {
                 return node;
             }
@@ -103,28 +101,28 @@ public class Scheduler {
     }
 
 
-    private boolean mustRunAfter(BuildStep step, BuildStep stepToCheck) {
+    private boolean mustRunAfter(Schedulable step, Schedulable stepToCheck) {
         return stepToCheckNeedsInputFrom(step, stepToCheck) ||
                stepToCheckRequiresPredecessor(step, stepToCheck) ||
                stepRequiresSuccessor(step, stepToCheck);
     }
 
-    private boolean stepToCheckNeedsInputFrom(BuildStep step, BuildStep stepToCheck) {
+    private boolean stepToCheckNeedsInputFrom(Schedulable step, Schedulable stepToCheck) {
         return !Sets.intersection(step.outputs(), stepToCheck.inputs()).isEmpty();
     }
 
-    private boolean stepToCheckRequiresPredecessor(BuildStep step, BuildStep stepToCheck) {
+    private boolean stepToCheckRequiresPredecessor(Schedulable step, Schedulable stepToCheck) {
         return stepToCheck.predecessors().contains(step);
     }
 
-    private boolean stepRequiresSuccessor(BuildStep step, BuildStep stepToCheck) {
+    private boolean stepRequiresSuccessor(Schedulable step, Schedulable stepToCheck) {
         return step.successors().contains(stepToCheck);
     }
 
-    private Set<DagNode<BuildStep>> findNodesWithPredecessors(Set<DagNode<BuildStep>> allNodes) {
-        HashSet<DagNode<BuildStep>> result = new HashSet<DagNode<BuildStep>>();
+    private Set<DagNode<Schedulable>> findNodesWithPredecessors(Set<DagNode<Schedulable>> allNodes) {
+        HashSet<DagNode<Schedulable>> result = new HashSet<DagNode<Schedulable>>();
 
-        for (DagNode<BuildStep> node : allNodes) {
+        for (DagNode<Schedulable> node : allNodes) {
             if (nodeExistsAsSuccessor(node, allNodes)) {
                 result.add(node);
             }
@@ -133,8 +131,8 @@ public class Scheduler {
         return result;
     }
 
-    private boolean nodeExistsAsSuccessor(DagNode<BuildStep> node, Set<DagNode<BuildStep>> allNodes) {
-        for (DagNode<BuildStep> possiblePredecessor : allNodes) {
+    private boolean nodeExistsAsSuccessor(DagNode<Schedulable> node, Set<DagNode<Schedulable>> allNodes) {
+        for (DagNode<Schedulable> possiblePredecessor : allNodes) {
             if (possiblePredecessor.getEdges().contains(node)) {
                 return true;
             }

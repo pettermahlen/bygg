@@ -8,6 +8,7 @@ package com.pettermahlen.bygg.steps;
 import com.google.inject.Injector;
 import com.pettermahlen.bygg.*;
 import com.pettermahlen.bygg.executors.SourceAssembler;
+import com.pettermahlen.bygg.scheduling.Schedulable;
 
 import java.util.Set;
 
@@ -36,11 +37,11 @@ public class AssembleSources implements BuildStep {
         throw new UnsupportedOperationException();
     }
 
-    public Set<? extends BuildStep> predecessors() {
+    public Set<? extends Schedulable> predecessors() {
         throw new UnsupportedOperationException();
     }
 
-    public Set<? extends BuildStep> successors() {
+    public Set<? extends Schedulable> successors() {
         throw new UnsupportedOperationException();
     }
 

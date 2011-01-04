@@ -6,10 +6,7 @@
 package com.pettermahlen.bygg;
 
 import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.Module;
-
-import java.util.Set;
+import com.pettermahlen.bygg.scheduling.Schedulable;
 
 /**
  * TODO: document this class!
@@ -17,14 +14,8 @@ import java.util.Set;
  * @author Petter Måhlén
  * @since Dec 14, 2010
  */
-public interface BuildStep {
+public interface BuildStep extends Schedulable {
     String getName();
-
-    Set<? extends BuildResult> inputs();
-    Set<? extends BuildResult> outputs();
-
-    Set<? extends BuildStep> predecessors();
-    Set<? extends BuildStep> successors();
 
     BuildStepExecutor createExecutor(Injector injector, Reporter reporter);
 }

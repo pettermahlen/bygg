@@ -6,11 +6,9 @@
 package com.pettermahlen.bygg.steps;
 
 import com.google.inject.Injector;
-import com.pettermahlen.bygg.BuildResult;
-import com.pettermahlen.bygg.BuildStep;
-import com.pettermahlen.bygg.BuildStepExecutor;
-import com.pettermahlen.bygg.Reporter;
+import com.pettermahlen.bygg.*;
 import com.pettermahlen.bygg.dependency.ClasspathType;
+import com.pettermahlen.bygg.scheduling.Schedulable;
 
 import java.util.Set;
 
@@ -37,15 +35,20 @@ public class Compile implements BuildStep {
         throw new UnsupportedOperationException();
     }
 
-    public Set<? extends BuildStep> predecessors() {
+    public Set<? extends Schedulable> predecessors() {
         throw new UnsupportedOperationException();
     }
 
-    public Set<? extends BuildStep> successors() {
+    public Set<? extends Schedulable> successors() {
         throw new UnsupportedOperationException();
     }
 
     public BuildStepExecutor createExecutor(Injector injector, Reporter reporter) {
         throw new UnsupportedOperationException();
+    }
+
+
+    public static class Builder {
+        
     }
 }

@@ -6,11 +6,7 @@
 package com.pettermahlen.bygg.scheduling;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.inject.Injector;
 import com.pettermahlen.bygg.BuildResult;
-import com.pettermahlen.bygg.BuildStep;
-import com.pettermahlen.bygg.BuildStepExecutor;
-import com.pettermahlen.bygg.Reporter;
 
 import java.util.Set;
 
@@ -20,49 +16,46 @@ import java.util.Set;
  * @author Petter Måhlén
  * @since Dec 27, 2010
  */
-public class SchedulableBuildStep implements BuildStep {
-    private final String name;
+public class SchedulableImpl implements Schedulable {
     private final ImmutableSet<? extends BuildResult> inputs;
     private final ImmutableSet<? extends BuildResult> outputs;
-    private final ImmutableSet<? extends BuildStep> predecessors;
-    private final ImmutableSet<? extends BuildStep> successors;
+    private final ImmutableSet<? extends Schedulable> predecessors;
+    private final ImmutableSet<? extends Schedulable> successors;
 
-    public SchedulableBuildStep(String name, Iterable<? extends BuildResult> inputs, Iterable<? extends BuildResult> outputs, Iterable<? extends BuildStep> predecessors, Iterable<? extends BuildStep> successors) {
-        this.name = name;
+    public SchedulableImpl(Iterable<? extends BuildResult> inputs, Iterable<? extends BuildResult> outputs, Iterable<? extends Schedulable> predecessors, Iterable<? extends Schedulable> successors) {
         this.inputs = ImmutableSet.copyOf(inputs);
         this.outputs = ImmutableSet.copyOf(outputs);
         this.predecessors = ImmutableSet.copyOf(predecessors);
         this.successors = ImmutableSet.copyOf(successors);
     }
 
-    public String getName() {
-        return name;
-    }
-
+    @Override
     public Set<? extends BuildResult> inputs() {
         return inputs;
     }
 
+    @Override
     public Set<? extends BuildResult> outputs() {
         return outputs;
     }
 
-    public Set<? extends BuildStep> predecessors() {
+    @Override
+    public Set<? extends Schedulable> predecessors() {
         return predecessors;
     }
 
-    public Set<? extends BuildStep> successors() {
+    @Override
+    public Set<? extends Schedulable> successors() {
         return successors;
-    }
-
-    public BuildStepExecutor createExecutor(Injector injector, Reporter reporter) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
     public String toString() {
-        return "SchedulableBuildStep{" +
-                "name='" + name + '\'' +
+        return "SchedulableImpl{" +
+                "inputs=" + inputs +
+                ", outputs=" + outputs +
+                ", predecessors=" + predecessors +
+                ", successors=" + successors +
                 '}';
     }
 }
