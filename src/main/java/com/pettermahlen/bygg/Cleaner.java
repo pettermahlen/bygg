@@ -12,5 +12,5 @@ package com.pettermahlen.bygg;
  * @since 07/02/2011
  */
 public interface Cleaner {
-    void clean(String directory);
+    void clean(String directoryName);
 }

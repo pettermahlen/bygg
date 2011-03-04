@@ -15,4 +15,8 @@ public class ByggException extends RuntimeException {
     public ByggException(String s, Throwable throwable) {
         super(s, throwable);
     }
+
+    public ByggException(String message) {
+        super(message);
+    }
 }

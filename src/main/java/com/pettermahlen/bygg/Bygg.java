@@ -46,7 +46,7 @@ public class Bygg {
 
     public static void main(String[] args) {
         // parse cmd-line args
-        // initialise a Bygg instance using guice
+        // initialise a Bygg instance using guice?!
         // kick off
     }
 }
