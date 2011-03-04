@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
  * @author Petter Måhlén
  * @since 04/03/2011
  */
-class MethodInvokingLoader<T> implements Loader<T> {
+public class MethodInvokingLoader<T> implements Loader<T> {
     private final String sourceClassName;
     private final String methodName;
 
