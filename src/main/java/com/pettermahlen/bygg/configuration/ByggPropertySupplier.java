@@ -6,9 +6,8 @@
 package com.pettermahlen.bygg.configuration;
 
 import com.google.common.base.Supplier;
-import com.google.inject.internal.ImmutableMap;
+import com.google.common.collect.ImmutableMap;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
