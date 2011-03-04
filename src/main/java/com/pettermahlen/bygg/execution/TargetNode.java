@@ -52,7 +52,7 @@ public class TargetNode {
         return "TargetNode{" +
                 "name='" + name + '\'' +
                 ", executor=" + executor +
-                ", predecessors=" + predecessors +
+                ", requires=" + predecessors +
                 '}';
     }
 

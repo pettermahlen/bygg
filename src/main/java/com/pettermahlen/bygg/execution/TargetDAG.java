@@ -22,10 +22,10 @@ import java.util.Set;
 public class TargetDAG {
     public static final TargetDAG DEFAULT = new TargetDAG(Collections.<TargetNode>emptyList())
             .add("assembleMain").executor(new DummyExecutor("assembleMain"))
-            .add("compile").executor(new DummyExecutor("compile")).predecessors("assembleMain")
+            .add("compile").executor(new DummyExecutor("compile")).requires("assembleMain")
             .add("assembleTest").executor(new DummyExecutor("assembleTest"))
-            .add("compileTest").executor(new DummyExecutor("compileTest")).predecessors("assembleTest", "compile")
-            .add("test").executor(new DummyExecutor("test")).predecessors("compile", "compileTest")
+            .add("compileTest").executor(new DummyExecutor("compileTest")).requires("assembleTest", "compile")
+            .add("test").executor(new DummyExecutor("test")).requires("compile", "compileTest")
             .build();
 
     private final Set<TargetNode> targetNodes;
@@ -100,7 +100,7 @@ public class TargetDAG {
             return this;
         }
 
-        public Builder predecessors(String... nodeNames) {
+        public Builder requires(String... nodeNames) {
             for (String nodeName : nodeNames) {
                 predecessorsBuilder.add(findNode(nodeName));
             }

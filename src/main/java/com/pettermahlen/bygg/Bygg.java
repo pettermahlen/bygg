@@ -35,23 +35,36 @@ public class Bygg {
     }
 
     public void build(boolean cleanRequired, List<String> targetNames) throws Exception {
+        long time = System.nanoTime();
+
         Map<ByggProperty, String> properties = propertiesSupplier.get();
+
+        System.out.println("Time after properties (ns): " + (System.nanoTime() - time));
 
         if (cleanRequired) {
             cleaner.clean(properties.get(ByggProperty.TARGET_DIR));
         }
 
+        System.out.println("Time after clean (ns): " + (System.nanoTime() - time));
+
         if (!targetNames.isEmpty()) {
             byggBootstrap.startBuild(targetNames, properties);
         }
+
+        System.out.println("Time after build (ns): " + (System.nanoTime() - time));
     }
 
     public static void main(String[] args) throws Exception {
+
+        long time = System.nanoTime();
+
         ByggArguments arguments = new ArgumentParser(args).parse();
 
         Bygg bygg = wireUp();
 
         bygg.build(arguments.isClean(), arguments.getTargets());
+
+        System.out.println("total time taken: (ms) " + (System.nanoTime() - time) / 1000000L);      
     }
 
     // TODO: maybe do this using Guice or something.
