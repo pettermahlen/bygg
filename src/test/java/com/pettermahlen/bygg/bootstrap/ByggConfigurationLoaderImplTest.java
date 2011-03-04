@@ -6,13 +6,14 @@
 package com.pettermahlen.bygg.bootstrap;
 
 import com.pettermahlen.bygg.Build;
-import com.pettermahlen.bygg.bootstrap.ByggConfigurationLoaderImpl;
 import com.pettermahlen.bygg.configuration.ByggConfiguration;
 import com.pettermahlen.bygg.configuration.ByggProperty;
+import com.pettermahlen.bygg.execution.TargetDAG;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -34,7 +35,8 @@ public class ByggConfigurationLoaderImplTest {
     Map<ByggProperty, String> properties;
 
     static final ByggConfiguration byggConfiguration = new ByggConfiguration() {
-        public String vardet() {
+        @Override
+        public TargetDAG getTargetDAG() {
             throw new UnsupportedOperationException();
         }
     };
@@ -44,9 +46,9 @@ public class ByggConfigurationLoaderImplTest {
     @SuppressWarnings({"unchecked"})
     @Before
     public void setUp() throws Exception {
-        loader = new ByggConfigurationLoaderImpl();
 
         classLoader = mock(ClassLoader.class);
+        loader = new ByggConfigurationLoaderImpl(null);
 
         properties = mock(Map.class);
     }
@@ -77,8 +79,8 @@ public class ByggConfigurationLoaderImplTest {
     }
 
     static class BuildClass extends Build {
-        public BuildClass(ByggConfiguration byggConfiguration, Map<ByggProperty, String> properties) {
-            super(byggConfiguration, properties);
+        public BuildClass(ByggConfiguration byggConfiguration, Map<ByggProperty, String> properties, ExecutorService executorService) {
+            super(byggConfiguration, properties, executorService);
         }
     }
 

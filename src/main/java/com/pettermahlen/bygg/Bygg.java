@@ -13,6 +13,8 @@ import com.pettermahlen.bygg.configuration.Plugins;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * TODO: document this class!
@@ -54,11 +56,13 @@ public class Bygg {
 
     // TODO: maybe do this using Guice or something.
     private static Bygg wireUp() {
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+
         MavenArtifactClassLoaderFactory mavenArtifactClassLoaderFactory = new MavenArtifactClassLoaderFactoryImpl();
         Loader<Plugins> pluginsLoader = new MethodInvokingLoader<Plugins>("PluginConfiguration", "plugins");
         HierarchicalClassLoaderSource compilingClassLoaderSource = new JaninoClassLoaderSource("bygg");
         HierarchicalClassLoaderSource pluginClassLoaderSource = new PluginClassLoaderSource(pluginsLoader, compilingClassLoaderSource, mavenArtifactClassLoaderFactory);
-        ByggConfigurationLoader configurationLoader = new ByggConfigurationLoaderImpl();
+        ByggConfigurationLoader configurationLoader = new ByggConfigurationLoaderImpl(executorService);
         ByggBootstrap bootstrap = new ByggBootstrap(Bygg.class.getClassLoader(), pluginClassLoaderSource, compilingClassLoaderSource, configurationLoader);
 
         Cleaner cleaner = new CleanerImpl();

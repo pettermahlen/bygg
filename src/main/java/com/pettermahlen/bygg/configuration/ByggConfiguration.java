@@ -5,6 +5,8 @@
 
 package com.pettermahlen.bygg.configuration;
 
+import com.pettermahlen.bygg.execution.TargetDAG;
+
 /**
  * TODO: document this class!
  *
@@ -12,5 +14,5 @@ package com.pettermahlen.bygg.configuration;
  * @since 04/02/2011
  */
 public interface ByggConfiguration {
-    String vardet();
+    TargetDAG getTargetDAG();
 }
