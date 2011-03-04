@@ -32,6 +32,9 @@ public class CleanerImplTest {
         directoryToClean = new File("target/test-clean");
 
         directoryToClean.mkdirs();
+
+        File file = new File(directoryToClean, "hej");
+        file.createNewFile();
     }
 
     @Test

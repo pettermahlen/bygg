@@ -28,8 +28,10 @@ public class PluginClassLoaderSourceTest {
 
     Loader<Plugins> pluginsLoader;
     MavenArtifactClassLoaderFactory mavenArtifactClassLoaderFactory;
+    HierarchicalClassLoaderSource compilingClassLoaderSource;
 
     ClassLoader parentClassLoader;
+    ClassLoader compilingClassLoader;
     Plugins plugins;
     List<ArtifactVersion> artifactVersions;
     ClassLoader dependencyAwareClassLoader;
@@ -39,10 +41,12 @@ public class PluginClassLoaderSourceTest {
     public void setUp() throws Exception {
         pluginsLoader = mock(Loader.class);
         mavenArtifactClassLoaderFactory = mock(MavenArtifactClassLoaderFactory.class);
+        compilingClassLoaderSource = mock(HierarchicalClassLoaderSource.class);
 
-        classLoaderSource = new PluginClassLoaderSource(pluginsLoader, mavenArtifactClassLoaderFactory);
+        classLoaderSource = new PluginClassLoaderSource(pluginsLoader, compilingClassLoaderSource, mavenArtifactClassLoaderFactory);
 
         parentClassLoader = mock(ClassLoader.class);
+        compilingClassLoader = mock(ClassLoader.class);
         plugins = mock(Plugins.class);
         artifactVersions = mock(List.class);
         dependencyAwareClassLoader = mock(ClassLoader.class);
@@ -50,7 +54,8 @@ public class PluginClassLoaderSourceTest {
 
     @Test
     public void testGetClassLoader() throws Exception {
-        when(pluginsLoader.load(parentClassLoader)).thenReturn(plugins);
+        when(compilingClassLoaderSource.getClassLoader(parentClassLoader)).thenReturn(compilingClassLoader);
+        when(pluginsLoader.load(compilingClassLoader)).thenReturn(plugins);
         when(plugins.plugins()).thenReturn(artifactVersions);
         when(mavenArtifactClassLoaderFactory.classLoaderFor(parentClassLoader, artifactVersions)).thenReturn(dependencyAwareClassLoader);
 

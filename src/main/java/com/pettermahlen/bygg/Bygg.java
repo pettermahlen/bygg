@@ -33,9 +33,6 @@ public class Bygg {
     }
 
     public void build(boolean cleanRequired, List<String> targetNames) throws Exception {
-        // read properties
-        // do clean if specified
-        // kick off regular build if specified
         Map<ByggProperty, String> properties = propertiesSupplier.get();
 
         if (cleanRequired) {
@@ -48,10 +45,6 @@ public class Bygg {
     }
 
     public static void main(String[] args) throws Exception {
-        // parse cmd-line args
-        // initialise a Bygg instance using guice?!
-        // kick off
-
         ByggArguments arguments = new ArgumentParser(args).parse();
 
         Bygg bygg = wireUp();
@@ -59,13 +52,14 @@ public class Bygg {
         bygg.build(arguments.isClean(), arguments.getTargets());
     }
 
+    // TODO: maybe do this using Guice or something.
     private static Bygg wireUp() {
         MavenArtifactClassLoaderFactory mavenArtifactClassLoaderFactory = new MavenArtifactClassLoaderFactoryImpl();
-        Loader<Plugins> pluginsLoader = new MethodInvokingLoader<Plugins>("Plugins", "plugins");
-        HierarchicalClassLoaderSource pluginClassLoaderSource = new PluginClassLoaderSource(pluginsLoader, mavenArtifactClassLoaderFactory);
-        HierarchicalClassLoaderSource configuredClassLoaderSource = new JaninoClassLoaderSource("bygg");
+        Loader<Plugins> pluginsLoader = new MethodInvokingLoader<Plugins>("PluginConfiguration", "plugins");
+        HierarchicalClassLoaderSource compilingClassLoaderSource = new JaninoClassLoaderSource("bygg");
+        HierarchicalClassLoaderSource pluginClassLoaderSource = new PluginClassLoaderSource(pluginsLoader, compilingClassLoaderSource, mavenArtifactClassLoaderFactory);
         ByggConfigurationLoader configurationLoader = new ByggConfigurationLoaderImpl();
-        ByggBootstrap bootstrap = new ByggBootstrap(Bygg.class.getClassLoader(), pluginClassLoaderSource, configuredClassLoaderSource, configurationLoader);
+        ByggBootstrap bootstrap = new ByggBootstrap(Bygg.class.getClassLoader(), pluginClassLoaderSource, compilingClassLoaderSource, configurationLoader);
 
         Cleaner cleaner = new CleanerImpl();
         Supplier<Map<ByggProperty, String>> byggPropertySupplier = new ByggPropertySupplier();

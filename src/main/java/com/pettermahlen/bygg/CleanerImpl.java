@@ -5,7 +5,10 @@
 
 package com.pettermahlen.bygg;
 
+import com.google.common.io.Files;
+
 import java.io.File;
+import java.io.IOException;
 
 /**
  * TODO: document this class!
@@ -23,10 +26,10 @@ public class CleanerImpl implements Cleaner {
             return;
         }
 
-        boolean result = directory.delete();
-
-        if (!result) {
-            throw new ByggException("failed to delete directory: " + directory.getAbsolutePath());
+        try {
+            Files.deleteRecursively(directory);
+        } catch (IOException e) {
+            throw new ByggException("failed to delete directory: " + directory.getAbsolutePath(), e);
         }
     }
 }
