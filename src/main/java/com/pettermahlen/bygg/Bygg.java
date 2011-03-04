@@ -6,6 +6,7 @@
 package com.pettermahlen.bygg;
 
 import com.google.common.base.Supplier;
+import com.pettermahlen.bygg.bootstrap.ByggBootstrap;
 import com.pettermahlen.bygg.configuration.ByggProperty;
 
 import java.util.List;

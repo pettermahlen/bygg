@@ -3,14 +3,14 @@
  * All rights reserved. Unauthorized disclosure or distribution is prohibited.
  */
 
-package com.pettermahlen.bygg;
+package com.pettermahlen.bygg.bootstrap;
 
+import com.pettermahlen.bygg.Build;
+import com.pettermahlen.bygg.ByggException;
 import com.pettermahlen.bygg.configuration.ByggConfiguration;
 import com.pettermahlen.bygg.configuration.ByggProperty;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
@@ -19,26 +19,14 @@ import java.util.Map;
  * @author Petter Måhlén
  * @since 04/03/2011
  */
-public class ByggConfigurationLoaderImpl implements ByggConfigurationLoader {
-    private static final String CONFIGURATION_CLASS_NAME = "Configuration";
+public class ByggConfigurationLoaderImpl extends MethodInvokingLoader<ByggConfiguration> implements ByggConfigurationLoader {
+    public ByggConfigurationLoaderImpl() {
+        super("Configuration", "configuration");
+    }
 
+    // TODO: this isn't perfect, but I can probably revisit that later.
     public ByggConfiguration loadConfiguration(ClassLoader classLoader) {
-        // TODO: should possibly make the configuration class name configurable, although that might be taking things a step too far?
-        try {
-            Class byggConfigurationClass = classLoader.loadClass(CONFIGURATION_CLASS_NAME);
-
-            Method configurationMethod = byggConfigurationClass.getMethod("configuration");
-
-            return (ByggConfiguration) configurationMethod.invoke(null);
-        } catch (ClassNotFoundException e) {
-            throw new ByggException("Class '" + CONFIGURATION_CLASS_NAME + "' not found", e);
-        } catch (NoSuchMethodException e) {
-            throw new ByggException("Class '" + CONFIGURATION_CLASS_NAME + "' doesn't have a static method called 'configuration'", e);
-        } catch (IllegalAccessException e) {
-            throw new ByggException("'configuration' method in class '" + CONFIGURATION_CLASS_NAME + "' isn't accessible", e);
-        } catch (InvocationTargetException e) {
-            throw new ByggException("'configuration' method in class '" + CONFIGURATION_CLASS_NAME + "' threw an exception", e);
-        }
+        return load(classLoader);
     }
 
     public Build loadBuild(ClassLoader classLoader, ByggConfiguration byggConfiguration, Map<ByggProperty, String> properties) {
@@ -57,4 +45,5 @@ public class ByggConfigurationLoaderImpl implements ByggConfigurationLoader {
             throw new ByggException("'Build' class could not be instantiated - THIS SHOULD NOT BE POSSIBLE", e);
         }
     }
+
 }

@@ -24,9 +24,9 @@ public class Configuration implements ByggConfiguration {
 
             Object plugin = pluginClass.newInstance();
 
-            Method execute = plugin.getClass().getMethod("execute", null);
+            Method execute = plugin.getClass().getMethod("execute");
 
-            execute.invoke(plugin, null);
+            execute.invoke(plugin);
 
         } catch (Exception e) {
             throw new RuntimeException(e);

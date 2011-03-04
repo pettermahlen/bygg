@@ -3,14 +3,17 @@
  * All rights reserved. Unauthorized disclosure or distribution is prohibited.
  */
 
-package com.pettermahlen.bygg;
+package com.pettermahlen.bygg.bootstrap;
 
+import com.pettermahlen.bygg.Build;
+import com.pettermahlen.bygg.bootstrap.ByggBootstrap;
+import com.pettermahlen.bygg.bootstrap.ByggConfigurationLoader;
+import com.pettermahlen.bygg.bootstrap.HierarchicalClassLoaderSource;
 import com.pettermahlen.bygg.configuration.ByggConfiguration;
 import com.pettermahlen.bygg.configuration.ByggProperty;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 

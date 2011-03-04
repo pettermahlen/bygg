@@ -3,8 +3,9 @@
  * All rights reserved. Unauthorized disclosure or distribution is prohibited.
  */
 
-package com.pettermahlen.bygg;
+package com.pettermahlen.bygg.bootstrap;
 
+import com.pettermahlen.bygg.Build;
 import com.pettermahlen.bygg.configuration.ByggConfiguration;
 import com.pettermahlen.bygg.configuration.ByggProperty;
 
@@ -34,13 +35,6 @@ public class ByggBootstrap {
     }
 
     public void startBuild(List<String> targetNames, Map<ByggProperty, String> properties) throws Exception {
-        // bootstrap build:
-        // - get a bootstrap class loader for figuring out the configuration
-        // - get a class loader that has access to the configuration for the rest of the build
-        // - get the configuration instance out of the configured class loader
-        // - get a build executor instance out of the configured class loader
-        // - kick off the build using the executor instance and the configuration instance
-
         // the plugin class loader has access to all plugins needed to compile the configuration and run the build.
         ClassLoader pluginClassLoader = pluginClassLoaderSource.getClassLoader(parentClassLoader);
 

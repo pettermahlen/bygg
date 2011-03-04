@@ -3,7 +3,7 @@
  * All rights reserved. Unauthorized disclosure or distribution is prohibited.
  */
 
-package com.pettermahlen.bygg;
+package com.pettermahlen.bygg.bootstrap;
 
 import org.codehaus.janino.DebuggingInformation;
 import org.codehaus.janino.JavaSourceClassLoader;
