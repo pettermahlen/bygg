@@ -16,7 +16,7 @@ import java.io.File;
  * @author Petter Måhlén
  * @since 04/02/2011
  */
-public class JaninoClassLoaderSource implements ConfiguredClassLoaderSource {
+public class JaninoClassLoaderSource implements HierarchicalClassLoaderSource {
     private  final String sourcePath;
 
     public JaninoClassLoaderSource(String sourcePath) {

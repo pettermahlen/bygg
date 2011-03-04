@@ -11,6 +11,6 @@ package com.pettermahlen.bygg;
  * @author Petter Måhlén
  * @since 04/02/2011
  */
-public interface ConfiguredClassLoaderSource {
+public interface HierarchicalClassLoaderSource {
     ClassLoader getClassLoader(ClassLoader parent);
 }

@@ -8,6 +8,7 @@ package com.pettermahlen.bygg;
 import com.pettermahlen.bygg.configuration.ByggConfiguration;
 import com.pettermahlen.bygg.configuration.ByggProperty;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,7 +26,7 @@ public class Build {
         this.properties = properties;
     }
 
-    public void build(String[] targetNames) {
+    public void build(List<String> targetNames) {
         System.out.println("configuration value: " + byggConfiguration.vardet());
     }
 }

@@ -8,6 +8,7 @@ package com.pettermahlen.bygg;
 import com.google.common.base.Supplier;
 import com.pettermahlen.bygg.configuration.ByggProperty;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,7 +28,7 @@ public class Bygg {
         this.byggBootstrap = byggBootstrap;
     }
 
-    public void build(boolean cleanRequired, String[] targetNames) throws Exception {
+    public void build(boolean cleanRequired, List<String> targetNames) throws Exception {
         // read properties
         // do clean if specified
         // kick off regular build if specified
@@ -37,14 +38,14 @@ public class Bygg {
             cleaner.clean(properties.get(ByggProperty.TARGET_DIR));
         }
 
-        if (targetNames.length > 0) {
+        if (!targetNames.isEmpty()) {
             byggBootstrap.startBuild(targetNames, properties);
         }
     }
 
     public static void main(String[] args) {
         // parse cmd-line args
-        // initialise a Bygg instance
+        // initialise a Bygg instance using guice
         // kick off
     }
 }
