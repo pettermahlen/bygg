@@ -15,6 +15,6 @@ import java.util.List;
  * @author Petter Måhlén
  * @since 04/03/2011
  */
-public interface DependencyClassLoaderFactory {
+public interface MavenArtifactClassLoaderFactory {
     ClassLoader classLoaderFor(ClassLoader parent, List<ArtifactVersion> artifactVersions);
 }

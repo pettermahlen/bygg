@@ -29,8 +29,8 @@ import static org.mockito.Mockito.mock;
  * @author Petter Måhlén
  * @since 04/03/2011
  */
-public class DependencyClassLoaderFactoryImplTest {
-    DependencyClassLoaderFactoryImpl factory;
+public class MavenArtifactClassLoaderFactoryImplTest {
+    MavenArtifactClassLoaderFactoryImpl factory;
 
     ClassLoader parent;
     List<ArtifactVersion> artifactVersions;
@@ -39,7 +39,7 @@ public class DependencyClassLoaderFactoryImplTest {
 
     @Before
     public void setUp() throws Exception {
-        factory = new DependencyClassLoaderFactoryImpl();
+        factory = new MavenArtifactClassLoaderFactoryImpl();
 
         parent = mock(ClassLoader.class);
 

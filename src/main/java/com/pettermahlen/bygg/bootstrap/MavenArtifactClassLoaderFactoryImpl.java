@@ -22,7 +22,7 @@ import java.util.List;
  * @author Petter Måhlén
  * @since 04/03/2011
  */
-public class DependencyClassLoaderFactoryImpl implements DependencyClassLoaderFactory {
+public class MavenArtifactClassLoaderFactoryImpl implements MavenArtifactClassLoaderFactory {
     @Override
     public ClassLoader classLoaderFor(ClassLoader parent, List<ArtifactVersion> artifactVersions) {
         List<URL> urls = new ArrayList<URL>(artifactVersions.size());

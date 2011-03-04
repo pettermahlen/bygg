@@ -15,11 +15,11 @@ import com.pettermahlen.bygg.configuration.Plugins;
  */
 public class PluginClassLoaderSource implements HierarchicalClassLoaderSource {
     private final Loader<Plugins> pluginsLoader;
-    private final DependencyClassLoaderFactory dependencyClassLoaderFactory;
+    private final MavenArtifactClassLoaderFactory mavenArtifactClassLoaderFactory;
 
-    public PluginClassLoaderSource(Loader<Plugins> pluginsLoader, DependencyClassLoaderFactory dependencyClassLoaderFactory) {
+    public PluginClassLoaderSource(Loader<Plugins> pluginsLoader, MavenArtifactClassLoaderFactory mavenArtifactClassLoaderFactory) {
         this.pluginsLoader = pluginsLoader;
-        this.dependencyClassLoaderFactory = dependencyClassLoaderFactory;
+        this.mavenArtifactClassLoaderFactory = mavenArtifactClassLoaderFactory;
     }
 
 
@@ -29,6 +29,6 @@ public class PluginClassLoaderSource implements HierarchicalClassLoaderSource {
         // return a URL class loader that has access to all plugins
         Plugins plugins = pluginsLoader.load(parent);
 
-        return dependencyClassLoaderFactory.classLoaderFor(parent, plugins.plugins());
+        return mavenArtifactClassLoaderFactory.classLoaderFor(parent, plugins.plugins());
     }
 }
