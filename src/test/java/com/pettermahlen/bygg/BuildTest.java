@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.pettermahlen.bygg.configuration.ByggConfiguration;
 import com.pettermahlen.bygg.configuration.ByggProperty;
+import com.pettermahlen.bygg.execution.NodeCallableFactory;
 import com.pettermahlen.bygg.execution.TargetDAG;
 import com.pettermahlen.bygg.execution.TargetNode;
 import org.junit.Before;

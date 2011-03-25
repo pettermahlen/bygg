@@ -3,10 +3,12 @@
  * All rights reserved. Unauthorized disclosure or distribution is prohibited.
  */
 
-package com.pettermahlen.bygg;
+package com.pettermahlen.bygg.execution;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
+import com.pettermahlen.bygg.ByggException;
+import com.pettermahlen.bygg.ByggTargetExecutor;
 
 import java.util.Set;
 import java.util.concurrent.Callable;

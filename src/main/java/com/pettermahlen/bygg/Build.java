@@ -9,12 +9,12 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.pettermahlen.bygg.configuration.ByggConfiguration;
 import com.pettermahlen.bygg.configuration.ByggProperty;
+import com.pettermahlen.bygg.execution.NodeCallableFactory;
 import com.pettermahlen.bygg.execution.TargetDAG;
 import com.pettermahlen.bygg.execution.TargetNode;
 
 import java.util.*;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 

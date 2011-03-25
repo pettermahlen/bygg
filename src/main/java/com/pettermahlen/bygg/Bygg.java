@@ -10,6 +10,8 @@ import com.pettermahlen.bygg.bootstrap.*;
 import com.pettermahlen.bygg.configuration.ByggProperty;
 import com.pettermahlen.bygg.configuration.ByggPropertySupplier;
 import com.pettermahlen.bygg.configuration.Plugins;
+import com.pettermahlen.bygg.execution.NodeCallableFactory;
+import com.pettermahlen.bygg.execution.NodeCallableFactoryImpl;
 
 import java.util.List;
 import java.util.Map;

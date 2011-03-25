@@ -3,8 +3,11 @@
  * All rights reserved. Unauthorized disclosure or distribution is prohibited.
  */
 
-package com.pettermahlen.bygg;
+package com.pettermahlen.bygg.execution;
 
+import com.pettermahlen.bygg.ByggTargetExecutor;
+import com.pettermahlen.bygg.execution.NodeCallable;
+import com.pettermahlen.bygg.execution.NodeCallableFactoryImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +17,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 

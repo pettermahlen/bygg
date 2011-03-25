@@ -6,7 +6,7 @@
 package com.pettermahlen.bygg.bootstrap;
 
 import com.pettermahlen.bygg.Build;
-import com.pettermahlen.bygg.NodeCallableFactory;
+import com.pettermahlen.bygg.execution.NodeCallableFactory;
 import com.pettermahlen.bygg.configuration.ByggConfiguration;
 import com.pettermahlen.bygg.configuration.ByggProperty;
 import com.pettermahlen.bygg.execution.TargetDAG;

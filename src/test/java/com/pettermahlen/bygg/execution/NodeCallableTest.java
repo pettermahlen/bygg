@@ -3,8 +3,10 @@
  * All rights reserved. Unauthorized disclosure or distribution is prohibited.
  */
 
-package com.pettermahlen.bygg;
+package com.pettermahlen.bygg.execution;
 
+import com.pettermahlen.bygg.ByggTargetExecutor;
+import com.pettermahlen.bygg.execution.NodeCallable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +22,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * TODO: document this class!

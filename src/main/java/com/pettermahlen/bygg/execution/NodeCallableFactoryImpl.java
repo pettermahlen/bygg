@@ -3,7 +3,9 @@
  * All rights reserved. Unauthorized disclosure or distribution is prohibited.
  */
 
-package com.pettermahlen.bygg;
+package com.pettermahlen.bygg.execution;
+
+import com.pettermahlen.bygg.ByggTargetExecutor;
 
 import java.util.Set;
 import java.util.concurrent.Callable;
