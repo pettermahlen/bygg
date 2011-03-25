@@ -6,6 +6,7 @@
 package com.pettermahlen.bygg.bootstrap;
 
 import com.pettermahlen.bygg.Build;
+import com.pettermahlen.bygg.NodeCallableFactory;
 import com.pettermahlen.bygg.configuration.ByggConfiguration;
 import com.pettermahlen.bygg.configuration.ByggProperty;
 import com.pettermahlen.bygg.execution.TargetDAG;
@@ -30,6 +31,9 @@ import static org.mockito.Mockito.when;
 public class ByggConfigurationLoaderImplTest {
     ByggConfigurationLoaderImpl loader;
 
+    ExecutorService executorService;
+    NodeCallableFactory nodeCallableFactory;
+
     ClassLoader classLoader;
 
     Map<ByggProperty, String> properties;
@@ -48,7 +52,10 @@ public class ByggConfigurationLoaderImplTest {
     public void setUp() throws Exception {
 
         classLoader = mock(ClassLoader.class);
-        loader = new ByggConfigurationLoaderImpl(null);
+        executorService = mock(ExecutorService.class);
+        nodeCallableFactory = mock(NodeCallableFactory.class);
+
+        loader = new ByggConfigurationLoaderImpl(executorService, nodeCallableFactory);
 
         properties = mock(Map.class);
     }
@@ -79,8 +86,8 @@ public class ByggConfigurationLoaderImplTest {
     }
 
     static class BuildClass extends Build {
-        public BuildClass(ByggConfiguration byggConfiguration, Map<ByggProperty, String> properties, ExecutorService executorService) {
-            super(byggConfiguration, properties, executorService);
+        public BuildClass(ByggConfiguration byggConfiguration, Map<ByggProperty, String> properties, ExecutorService executorService, NodeCallableFactory nodeCallableFactory) {
+            super(byggConfiguration, properties, executorService, nodeCallableFactory);
         }
     }
 

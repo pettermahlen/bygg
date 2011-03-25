@@ -5,8 +5,10 @@
 
 package com.pettermahlen.bygg.bootstrap;
 
+import com.google.common.base.Preconditions;
 import com.pettermahlen.bygg.Build;
 import com.pettermahlen.bygg.ByggException;
+import com.pettermahlen.bygg.NodeCallableFactory;
 import com.pettermahlen.bygg.configuration.ByggConfiguration;
 import com.pettermahlen.bygg.configuration.ByggProperty;
 
@@ -22,10 +24,12 @@ import java.util.concurrent.ExecutorService;
  */
 public class ByggConfigurationLoaderImpl extends MethodInvokingLoader<ByggConfiguration> implements ByggConfigurationLoader {
     private final ExecutorService executorService;
+    private final NodeCallableFactory nodeCallableFactory;
 
-    public ByggConfigurationLoaderImpl(ExecutorService executorService) {
+    public ByggConfigurationLoaderImpl(ExecutorService executorService, NodeCallableFactory nodeCallableFactory) {
         super("Configuration", "configuration");
-        this.executorService = executorService;
+        this.executorService = Preconditions.checkNotNull(executorService, "executorService");
+        this.nodeCallableFactory = Preconditions.checkNotNull(nodeCallableFactory, "nodeCallableFactory");
     }
 
     // TODO: this isn't perfect, but I can probably revisit that later.
@@ -39,9 +43,9 @@ public class ByggConfigurationLoaderImpl extends MethodInvokingLoader<ByggConfig
             // is that the class must be loaded by a class loader that has access to the Configuration.
             @SuppressWarnings({"unchecked"}) Class<Build> buildClass = (Class<Build>) classLoader.loadClass("com.pettermahlen.bygg.Build");
 
-            final Constructor<Build> constructor = buildClass.getConstructor(ByggConfiguration.class, Map.class, ExecutorService.class);
+            final Constructor<Build> constructor = buildClass.getConstructor(ByggConfiguration.class, Map.class, ExecutorService.class, NodeCallableFactory.class);
             
-            return constructor.newInstance(byggConfiguration, properties, executorService);
+            return constructor.newInstance(byggConfiguration, properties, executorService, nodeCallableFactory);
         } catch (Exception e) {
             // catching 'exception' here, because the types of errors that can happen above should be guaranteed not to happen
             // given the design of the 'Build' class. So I'm lumping them together - the 'cause' will have the details anyway.

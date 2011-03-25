@@ -5,13 +5,15 @@
 
 package com.pettermahlen.bygg;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
 import com.pettermahlen.bygg.configuration.ByggConfiguration;
 import com.pettermahlen.bygg.configuration.ByggProperty;
-import com.pettermahlen.bygg.execution.Execution;
 import com.pettermahlen.bygg.execution.TargetDAG;
 import com.pettermahlen.bygg.execution.TargetNode;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -26,11 +28,13 @@ public class Build {
     private final ByggConfiguration byggConfiguration;
     private final Map<ByggProperty, String> properties;
     private final ExecutorService executorService;
+    private final NodeCallableFactory nodeCallableFactory;
 
-    public Build(ByggConfiguration byggConfiguration, Map<ByggProperty, String> properties, ExecutorService executorService) {
-        this.byggConfiguration = byggConfiguration;
-        this.properties = properties;
-        this.executorService = executorService;
+    public Build(ByggConfiguration byggConfiguration, Map<ByggProperty, String> properties, ExecutorService executorService, NodeCallableFactory nodeCallableFactory) {
+        this.byggConfiguration = Preconditions.checkNotNull(byggConfiguration, "byggConfiguration");
+        this.properties = ImmutableMap.copyOf(properties);
+        this.executorService = Preconditions.checkNotNull(executorService, "executorService");
+        this.nodeCallableFactory = Preconditions.checkNotNull(nodeCallableFactory, "nodeCallableFactory");
     }
 
     public void build(List<String> targetNames) {
@@ -39,89 +43,46 @@ public class Build {
         // TODO: there is a bug here, in that if a node is present in more than one path, it'll get executed twice.
         Set<TargetNode> sinkNodes = figureOutSinkNodes(totalDag, targetNames);
 
+        Map<TargetNode, Future<?>> executedNodes = new HashMap<TargetNode, Future<?>>();
+
         // OK, now set up the executions
         for (TargetNode targetNode : sinkNodes) {
-            recursivelyExecute(targetNode);
+            recursivelyExecute(targetNode, executedNodes);
         }
 
-        // TODO: should probably have some kind of factory for the exec service instead of possibly a singleton, so this guy manages the whole life cycle
+        // TODO: should probably have some kind of factory for the exec service instead of possibly a singleton, so this guy manages the whole life cycle of the service
         executorService.shutdown();
     }
 
     private Set<TargetNode> figureOutSinkNodes(TargetDAG totalDag, List<String> targetNames) {
-        // find the target nodes that correspond to the names
-        // remove any target nodes that are included in the set of predecessors of any other target node
-        // return the remainder
-
         Set<TargetNode> namedTargets = new HashSet<TargetNode>();
 
         for (String targetName : targetNames) {
             namedTargets.add(totalDag.findNode(targetName));
         }
 
-        // this algorithm has O(n*n*n) complexity, but the number of expected targets is low, so I don't mind for now
-        for (Iterator<TargetNode> iterator = namedTargets.iterator(); iterator.hasNext() ; ) {
-            TargetNode nodeToPossiblyRemove = iterator.next();
-
-            if (shouldRemove(namedTargets, nodeToPossiblyRemove)) {
-                iterator.remove();
-            }
-        }
-
         return namedTargets;
     }
 
-    private boolean shouldRemove(Set<TargetNode> namedTargets, TargetNode nodeToPossiblyRemove) {
-        for (TargetNode node : namedTargets) {
-            if (isInPredecessors(nodeToPossiblyRemove, node.getPredecessors())) {
-                return true;
-            }
-        }
-        
-        return false;
-    }
-
-    private boolean isInPredecessors(TargetNode nodeToPossiblyRemove, Set<TargetNode> predecessors) {
-        for (TargetNode node : predecessors) {
-            if (node.equals(nodeToPossiblyRemove)) {
-                return true;
-            }
-
-            if (isInPredecessors(nodeToPossiblyRemove, node.getPredecessors())) {
-                return true;
-            }
+    private Future<?> recursivelyExecute(TargetNode targetNode, Map<TargetNode, Future<?>> executedNodes) {
+        if (executedNodes.containsKey(targetNode)) {
+            return executedNodes.get(targetNode);
         }
 
-        return false;
+        Future<?> future = executorService.submit(createRunnable(targetNode, executedNodes));
+        executedNodes.put(targetNode, future);
+
+        return future;
     }
 
-    private Future<?> recursivelyExecute(TargetNode targetNode) {
-        return executorService.submit(createRunnable(targetNode));
-    }
-
-    private Runnable createRunnable(final TargetNode targetNode) {
+    private Callable<?> createRunnable(final TargetNode targetNode, Map<TargetNode, Future<?>> executedNodes) {
         final Set<Future<?>> futuresForNode = new HashSet<Future<?>>();
 
         for (TargetNode predecessor : targetNode.getPredecessors()) {
-            futuresForNode.add(recursivelyExecute(predecessor));
+            futuresForNode.add(recursivelyExecute(predecessor, executedNodes));
         }
 
-        return new Runnable() {
-            @Override
-            public void run() {
-                for (Future<?> future : futuresForNode) {
-                    try {
-                        future.get();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    } catch (ExecutionException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                targetNode.getExecutor().execute();
-            }
-        };
+        return nodeCallableFactory.createCallable(targetNode.getExecutor(), futuresForNode);
     }
 
 }

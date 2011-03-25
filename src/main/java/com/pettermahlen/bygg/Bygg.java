@@ -39,19 +39,19 @@ public class Bygg {
 
         Map<ByggProperty, String> properties = propertiesSupplier.get();
 
-        System.out.println("Time after properties (ns): " + (System.nanoTime() - time));
+        System.out.println("Time after properties (nms): " + (System.nanoTime() - time) / 1000000L);
 
         if (cleanRequired) {
             cleaner.clean(properties.get(ByggProperty.TARGET_DIR));
         }
 
-        System.out.println("Time after clean (ns): " + (System.nanoTime() - time));
+        System.out.println("Time after clean (ms): " + (System.nanoTime() - time) / 1000000L);
 
         if (!targetNames.isEmpty()) {
             byggBootstrap.startBuild(targetNames, properties);
         }
 
-        System.out.println("Time after build (ns): " + (System.nanoTime() - time));
+        System.out.println("Time after build (ms): " + (System.nanoTime() - time) / 1000000L);
     }
 
     public static void main(String[] args) throws Exception {
@@ -75,7 +75,8 @@ public class Bygg {
         Loader<Plugins> pluginsLoader = new MethodInvokingLoader<Plugins>("PluginConfiguration", "plugins");
         HierarchicalClassLoaderSource compilingClassLoaderSource = new JaninoClassLoaderSource("bygg");
         HierarchicalClassLoaderSource pluginClassLoaderSource = new PluginClassLoaderSource(pluginsLoader, compilingClassLoaderSource, mavenArtifactClassLoaderFactory);
-        ByggConfigurationLoader configurationLoader = new ByggConfigurationLoaderImpl(executorService);
+        NodeCallableFactory nodeCallableFactory = new NodeCallableFactoryImpl();
+        ByggConfigurationLoader configurationLoader = new ByggConfigurationLoaderImpl(executorService, nodeCallableFactory);
         ByggBootstrap bootstrap = new ByggBootstrap(Bygg.class.getClassLoader(), pluginClassLoaderSource, compilingClassLoaderSource, configurationLoader);
 
         Cleaner cleaner = new CleanerImpl();
