@@ -66,6 +66,7 @@ public class Bygg {
 
         bygg.build(arguments.isClean(), arguments.getTargets());
 
+        // TODO: this guy probably/certainly doesn't wait until the build is actuall done. Should be fixed, probably by using a better way of reporting
         System.out.println("total time taken: (ms) " + (System.nanoTime() - time) / 1000000L);      
     }
 
@@ -76,6 +77,7 @@ public class Bygg {
         MavenArtifactClassLoaderFactory mavenArtifactClassLoaderFactory = new MavenArtifactClassLoaderFactoryImpl();
         Loader<Plugins> pluginsLoader = new MethodInvokingLoader<Plugins>("PluginConfiguration", "plugins");
         HierarchicalClassLoaderSource compilingClassLoaderSource = new JaninoClassLoaderSource("bygg");
+//        HierarchicalClassLoaderSource compilingClassLoaderSource = new CompilingClassLoaderSource("bygg");
         HierarchicalClassLoaderSource pluginClassLoaderSource = new PluginClassLoaderSource(pluginsLoader, compilingClassLoaderSource, mavenArtifactClassLoaderFactory);
         NodeCallableFactory nodeCallableFactory = new NodeCallableFactoryImpl();
         ByggConfigurationLoader configurationLoader = new ByggConfigurationLoaderImpl(executorService, nodeCallableFactory);
