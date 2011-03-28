@@ -5,6 +5,7 @@
 
 package com.pettermahlen.bygg.bootstrap;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,6 +43,7 @@ public class CompilingClassLoaderTest {
 
         assertThat(loaded.getName(), equalTo("compilertest.ClassToCompile"));
         assertThat(loaded.getField("CONSTANT").get(null).toString(), equalTo("A constant value"));
+        assertThat(loaded.getField("anOtherClass").get(null), CoreMatchers.<Object>notNullValue());
     }
 
     @Test

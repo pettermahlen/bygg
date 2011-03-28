@@ -1,0 +1,5 @@
+package compilertest;
+
+class OtherClass {
+    
+}

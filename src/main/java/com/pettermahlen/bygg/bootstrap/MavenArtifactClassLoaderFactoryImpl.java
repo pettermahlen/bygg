@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class MavenArtifactClassLoaderFactoryImpl implements MavenArtifactClassLoaderFactory {
     @Override
-    public ClassLoader classLoaderFor(ClassLoader parent, List<ArtifactVersion> artifactVersions) {
+    public URLClassLoader classLoaderFor(ClassLoader parent, List<ArtifactVersion> artifactVersions) {
         List<URL> urls = new ArrayList<URL>(artifactVersions.size());
 
         for (ArtifactVersion artifactVersion : artifactVersions) {

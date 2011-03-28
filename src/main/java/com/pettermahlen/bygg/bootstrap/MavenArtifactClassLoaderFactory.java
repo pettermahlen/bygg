@@ -7,6 +7,7 @@ package com.pettermahlen.bygg.bootstrap;
 
 import com.pettermahlen.bygg.configuration.ArtifactVersion;
 
+import java.net.URLClassLoader;
 import java.util.List;
 
 /**
@@ -16,5 +17,5 @@ import java.util.List;
  * @since 04/03/2011
  */
 public interface MavenArtifactClassLoaderFactory {
-    ClassLoader classLoaderFor(ClassLoader parent, List<ArtifactVersion> artifactVersions);
+    URLClassLoader classLoaderFor(ClassLoader parent, List<ArtifactVersion> artifactVersions);
 }

@@ -25,8 +25,13 @@
     </dependency>
     <dependency>
       <groupId>org.codehaus.janino</groupId>
-      <artifactId>janino</artifactId>
-      <version>2.5.16</version>
+      <artifactId>commons-compiler-jdk</artifactId>
+      <version>2.6.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.janino</groupId>
+      <artifactId>commons-compiler</artifactId>
+      <version>2.6.1</version>
     </dependency>
     <dependency>
       <groupId>net.sf.jopt-simple</groupId>

@@ -7,13 +7,15 @@ package com.pettermahlen.bygg.bootstrap;
 
 import com.pettermahlen.bygg.configuration.Plugins;
 
+import java.net.URLClassLoader;
+
 /**
  * TODO: document this class!
  *
  * @author Petter Måhlén
  * @since 04/03/2011
  */
-public class PluginClassLoaderSource implements HierarchicalClassLoaderSource {
+public class PluginClassLoaderSource implements HierarchicalClassLoaderSource<URLClassLoader> {
     private final Loader<Plugins> pluginsLoader;
     private final HierarchicalClassLoaderSource compilingClassLoaderSource;
     private final MavenArtifactClassLoaderFactory mavenArtifactClassLoaderFactory;
@@ -25,7 +27,7 @@ public class PluginClassLoaderSource implements HierarchicalClassLoaderSource {
     }
 
 
-    public ClassLoader getClassLoader(ClassLoader parent) {
+    public URLClassLoader getClassLoader(ClassLoader parent) {
         ClassLoader compilingClassLoader = compilingClassLoaderSource.getClassLoader(parent);
 
         Plugins plugins = pluginsLoader.load(compilingClassLoader);

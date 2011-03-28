@@ -10,6 +10,7 @@ import com.pettermahlen.bygg.configuration.Plugins;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.URLClassLoader;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -34,7 +35,7 @@ public class PluginClassLoaderSourceTest {
     ClassLoader compilingClassLoader;
     Plugins plugins;
     List<ArtifactVersion> artifactVersions;
-    ClassLoader dependencyAwareClassLoader;
+    URLClassLoader dependencyAwareClassLoader;
 
     @SuppressWarnings({"unchecked"})
     @Before
@@ -49,7 +50,7 @@ public class PluginClassLoaderSourceTest {
         compilingClassLoader = mock(ClassLoader.class);
         plugins = mock(Plugins.class);
         artifactVersions = mock(List.class);
-        dependencyAwareClassLoader = mock(ClassLoader.class);
+        dependencyAwareClassLoader = mock(URLClassLoader.class);
     }
 
     @Test
@@ -59,7 +60,7 @@ public class PluginClassLoaderSourceTest {
         when(plugins.plugins()).thenReturn(artifactVersions);
         when(mavenArtifactClassLoaderFactory.classLoaderFor(parentClassLoader, artifactVersions)).thenReturn(dependencyAwareClassLoader);
 
-        ClassLoader actual = classLoaderSource.getClassLoader(parentClassLoader);
+        URLClassLoader actual = classLoaderSource.getClassLoader(parentClassLoader);
 
         assertThat(actual, equalTo(dependencyAwareClassLoader));
     }

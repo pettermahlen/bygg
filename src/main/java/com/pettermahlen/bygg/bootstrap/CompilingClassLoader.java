@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,7 +39,7 @@ public class CompilingClassLoader extends ClassLoader {
 
         StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
         Iterable<? extends JavaFileObject> compilationUnits =
-            fileManager.getJavaFileObjectsFromFiles(fileList(name));
+            fileManager.getJavaFileObjectsFromFiles(fileList());
 
         JavaCompiler.CompilationTask task = compiler.getTask(null, null, null, compilerOptions, null, compilationUnits);
 
@@ -50,7 +49,11 @@ public class CompilingClassLoader extends ClassLoader {
 
 
         try {
-            JavaFileObject classFile = fileManager.getJavaFileForOutput(StandardLocation.CLASS_OUTPUT, name, JavaFileObject.Kind.CLASS, null);
+            fileManager.close();
+
+            fileManager = compiler.getStandardFileManager(null, null, null);
+
+            JavaFileObject classFile = fileManager.getJavaFileForOutput(StandardLocation.CLASS_OUTPUT, name, JavaFileObject.Kind.CLASS, compilationUnits.iterator().next());
 
             byte[] classData = ByteStreams.toByteArray(classFile.openInputStream());
 
@@ -60,10 +63,29 @@ public class CompilingClassLoader extends ClassLoader {
         }
     }
 
-    private Iterable<? extends File> fileList(String name) {
-        String fileName = name.replaceAll("\\.", File.separator) + ".java";
+    private Iterable<? extends File> fileList() throws ClassNotFoundException {
+        File sourceRoot = new File(sourcePath);
 
-        return Arrays.asList(new File(sourcePath, fileName));
+        if (!sourceRoot.isDirectory()) {
+            throw new ClassNotFoundException("Unable to load class since source directory not found: " + sourceRoot.getAbsolutePath());
+        }
+
+        List<File> result = new ArrayList<File>();
+
+        addSourceFiles(sourceRoot, result);
+
+        return result;
+    }
+
+    private void addSourceFiles(File directory, List<File> result) {
+        for (File file : directory.listFiles()) {
+            if (file.getName().endsWith(JavaFileObject.Kind.SOURCE.extension)) {
+                result.add(file);
+            }
+            else if (file.isDirectory()) {
+                addSourceFiles(file, result);
+            }
+        }
     }
 
     private Iterable<String> compilerOptions() {

@@ -11,6 +11,6 @@ package com.pettermahlen.bygg.bootstrap;
  * @author Petter Måhlén
  * @since 04/02/2011
  */
-public interface HierarchicalClassLoaderSource {
-    ClassLoader getClassLoader(ClassLoader parent);
+public interface HierarchicalClassLoaderSource<T extends ClassLoader> {
+    T getClassLoader(ClassLoader parent);
 }

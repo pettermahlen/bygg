@@ -23,11 +23,11 @@ import java.util.Map;
  */
 public class ByggBootstrap {
     private final ClassLoader parentClassLoader;
-    private final HierarchicalClassLoaderSource pluginClassLoaderSource;
-    private final HierarchicalClassLoaderSource configuredClassLoaderSource;
+    private final HierarchicalClassLoaderSource<URLClassLoader> pluginClassLoaderSource;
+    private final HierarchicalClassLoaderSource<ClassLoader> configuredClassLoaderSource;
     private final ByggConfigurationLoader byggConfigurationLoader;
 
-    public ByggBootstrap(ClassLoader parentClassLoader, HierarchicalClassLoaderSource pluginClassLoaderSource, HierarchicalClassLoaderSource configuredClassLoaderSource, ByggConfigurationLoader byggConfigurationLoader) {
+    public ByggBootstrap(ClassLoader parentClassLoader, HierarchicalClassLoaderSource<URLClassLoader> pluginClassLoaderSource, HierarchicalClassLoaderSource<ClassLoader> configuredClassLoaderSource, ByggConfigurationLoader byggConfigurationLoader) {
         this.parentClassLoader = parentClassLoader;
         this.pluginClassLoaderSource = pluginClassLoaderSource;
         this.configuredClassLoaderSource = configuredClassLoaderSource;
@@ -36,7 +36,7 @@ public class ByggBootstrap {
 
     public void startBuild(List<String> targetNames, Map<ByggProperty, String> properties) throws Exception {
         // the plugin class loader has access to all plugins needed to compile the configuration and run the build.
-        ClassLoader pluginClassLoader = pluginClassLoaderSource.getClassLoader(parentClassLoader);
+        URLClassLoader pluginClassLoader = pluginClassLoaderSource.getClassLoader(parentClassLoader);
 
         // the configured class loader has access to the actual configuration that is used in the build
         ClassLoader configuredClassLoader = configuredClassLoaderSource.getClassLoader(pluginClassLoader);
@@ -45,17 +45,5 @@ public class ByggBootstrap {
         Build build = byggConfigurationLoader.loadBuild(configuredClassLoader, byggConfiguration, properties);
 
         build.build(targetNames);
-    }
-
-
-    public static void main(String[] args) throws Exception {
-        HierarchicalClassLoaderSource janinoClassLoaderSource = new JaninoClassLoaderSource("src/test/bygg");
-
-        URL[] urls = new URL[] { new URL("file:/Users/pettermahlen/.m2/repository/bygg-test-plugin/bygg-test-plugin/1.0-SNAPSHOT/bygg-test-plugin-1.0-SNAPSHOT.jar") };
-        ClassLoader parentClassLoader = new URLClassLoader(urls, ByggBootstrap.class.getClassLoader());
-
-        ByggBootstrap bootstrap = new ByggBootstrap(parentClassLoader, null, janinoClassLoaderSource, null);
-
-        bootstrap.startBuild(Collections.<String>emptyList(), Collections.<ByggProperty, String>emptyMap());
     }
 }
