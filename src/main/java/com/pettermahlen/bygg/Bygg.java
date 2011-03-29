@@ -13,6 +13,7 @@ import com.pettermahlen.bygg.configuration.Plugins;
 import com.pettermahlen.bygg.execution.NodeCallableFactory;
 import com.pettermahlen.bygg.execution.NodeCallableFactoryImpl;
 
+import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -76,9 +77,9 @@ public class Bygg {
 
         MavenArtifactClassLoaderFactory mavenArtifactClassLoaderFactory = new MavenArtifactClassLoaderFactoryImpl();
         Loader<Plugins> pluginsLoader = new MethodInvokingLoader<Plugins>("PluginConfiguration", "plugins");
-        HierarchicalClassLoaderSource compilingClassLoaderSource = new JaninoClassLoaderSource("bygg");
+        HierarchicalClassLoaderSource<ClassLoader> compilingClassLoaderSource = new JaninoClassLoaderSource("bygg");
 //        HierarchicalClassLoaderSource compilingClassLoaderSource = new CompilingClassLoaderSource("bygg");
-        HierarchicalClassLoaderSource pluginClassLoaderSource = new PluginClassLoaderSource(pluginsLoader, compilingClassLoaderSource, mavenArtifactClassLoaderFactory);
+        HierarchicalClassLoaderSource<URLClassLoader> pluginClassLoaderSource = new PluginClassLoaderSource(pluginsLoader, compilingClassLoaderSource, mavenArtifactClassLoaderFactory);
         NodeCallableFactory nodeCallableFactory = new NodeCallableFactoryImpl();
         ByggConfigurationLoader configurationLoader = new ByggConfigurationLoaderImpl(executorService, nodeCallableFactory);
         ByggBootstrap bootstrap = new ByggBootstrap(Bygg.class.getClassLoader(), pluginClassLoaderSource, compilingClassLoaderSource, configurationLoader);

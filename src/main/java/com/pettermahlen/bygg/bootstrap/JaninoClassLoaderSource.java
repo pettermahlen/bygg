@@ -6,11 +6,15 @@
 package com.pettermahlen.bygg.bootstrap;
 
 
+import com.google.common.collect.ImmutableList;
+import com.pettermahlen.bygg.configuration.ArtifactVersion;
 import org.codehaus.commons.compiler.jdk.JavaSourceClassLoader;
 
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.concurrent.CyclicBarrier;
 
 /**
  * TODO: document this class!
@@ -19,7 +23,7 @@ import java.net.URLClassLoader;
  * @since 04/02/2011
  */
 public class JaninoClassLoaderSource implements HierarchicalClassLoaderSource<ClassLoader> {
-    private  final String sourcePath;
+    private final String sourcePath;
 
     public JaninoClassLoaderSource(String sourcePath) {
         this.sourcePath = sourcePath;
@@ -43,24 +47,40 @@ public class JaninoClassLoaderSource implements HierarchicalClassLoaderSource<Cl
         return result;
     }
 
-    private String[] classPathOptionFor(URL[] urls) {
+    private String[] classPathOptionFor(URL[] pluginUrls) {
+        URL[] coreUrls = createCoreUrls();
+
         String[] result = new String[2];
 
         result[0] = "-classpath";
-        result[1] = classpathForUrls(urls);
+        result[1] = classpathForUrls(coreUrls, pluginUrls);
 
         return result;
     }
 
-    // TODO: this is broken and needs to be fixed. It needs to be the full classpath for everything that is needed
-    // for Bygg as well as the current set of plugins.
-    private String classpathForUrls(URL[] urls) {
+    private URL[] createCoreUrls() {
+        ArrayList<URL> urls = new ArrayList<URL>(CoreByggArtifacts.VERSIONS.size());
+
+        for (ArtifactVersion artifactVersion : CoreByggArtifacts.VERSIONS) {
+            urls.add(MavenArtifactLocator.createUrl(artifactVersion));
+        }
+
+        return urls.toArray(new URL[urls.size()]);
+    }
+
+    private String classpathForUrls(URL[] coreUrls, URL[] pluginUrls) {
         StringBuilder builder = new StringBuilder();
 
-        for (URL url : urls) {
-            builder.append(url.getFile()).append(File.pathSeparator);
-        }
+        addUrls(coreUrls, builder);
+        addUrls(pluginUrls, builder);
 
         return builder.toString();
     }
+
+    private void addUrls(URL[] urls, StringBuilder builder) {
+        for (URL url : urls) {
+            builder.append(url.getFile()).append(File.pathSeparator);
+        }
+    }
+
 }
