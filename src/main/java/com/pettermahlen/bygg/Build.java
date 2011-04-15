@@ -40,7 +40,6 @@ public class Build {
     public void build(List<String> targetNames) {
         TargetDAG totalDag = byggConfiguration.getTargetDAG();
 
-        // TODO: there is a bug here, in that if a node is present in more than one path, it'll get executed twice.
         Set<TargetNode> sinkNodes = figureOutSinkNodes(totalDag, targetNames);
 
         Map<TargetNode, Future<?>> executedNodes = new HashMap<TargetNode, Future<?>>();
@@ -49,6 +48,8 @@ public class Build {
         for (TargetNode targetNode : sinkNodes) {
             recursivelyExecute(targetNode, executedNodes);
         }
+
+        // TODO: should maybe be blocking on the futures
 
         // TODO: should probably have some kind of factory for the exec service instead of possibly a singleton, so this guy manages the whole life cycle of the service
         executorService.shutdown();
